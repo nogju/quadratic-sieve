@@ -14,16 +14,16 @@ function Field() {
              });
     }
 
-    function additiveInverse(x) {
+    function additiveInverse() {
         return this
-            .additiveIdentity
-            .subtract(x);
+            .additiveIdentity()
+            .subtract(this);
     }
 
-    function multiplicativeInverse(x) {
+    function multiplicativeInverse() {
         return this
-            .multiplicativeIdentity
-            .divide(x);
+            .multiplicativeIdentity()
+            .divide(this);
     }
 }
 
@@ -33,9 +33,9 @@ Field.aliases = {
     mul: 'multiply',
     sub: 'subtract',
     neg: 'additiveInverse',
-    inv: 'multiplicativeInverse'
+    zero: 'additiveIdentity',
+    inv: 'multiplicativeInverse',
+    one: 'multiplicativeIdentity'
 }
 
-module.exports = {
-    Field: Field
-}
+module.exports = Field;

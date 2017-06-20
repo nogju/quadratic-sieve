@@ -1,5 +1,5 @@
 var Matrix = require('./src/matrix');
-var Field = require('./src/field');
+var Numeric = require('./src/field/numeric');
 
 var matrix =[
     [1, 0, 1],
@@ -16,4 +16,5 @@ var elimination = Matrix.gaussianElimination(matrix);
 console.log(elimination.matrix);
 console.log(elimination.augmentingMatrix);
 
-var a = new Field.Field();
+var b = new Numeric(3);
+console.log(b.neg().value);
