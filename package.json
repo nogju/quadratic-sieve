@@ -1,0 +1,21 @@
+{
+  "name": "quadratic-sieve",
+  "version": "1.0.0",
+  "description": "A basic implementation of the quadratic sieve factorisation algorithm.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "quadratic",
+    "sieve",
+    "number",
+    "theory",
+    "factorise"
+  ],
+  "author": "Guy Paterson-Jones",
+  "license": "ISC",
+  "dependencies": {
+    "big.js": "^3.1.3"
+  }
+}
