@@ -1,5 +1,6 @@
 var Matrix = require('./src/matrix');
 var Numeric = require('./src/field/numeric');
+var Finite = require('./src/field/finite');
 
 var matrix =[
     [1, 0, 1],
@@ -16,5 +17,6 @@ var elimination = Matrix.gaussianElimination(matrix);
 console.log(elimination.matrix);
 console.log(elimination.augmentingMatrix);
 
-var b = new Numeric(3);
-console.log(b.neg().value);
+var a = new Finite.Z2(-11);
+var b = new Finite.Z2(-6);
+console.log(b.multiply(a).value);

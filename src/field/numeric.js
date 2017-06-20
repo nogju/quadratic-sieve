@@ -4,11 +4,13 @@ var Field = require('./field');
  * Implements a basic wrapper around javascript numeric types.
  */
 function Numeric(value) {
-    var parent = new Field();
-    parent.value = value || 0;
-    parent.add = add.bind(parent);
-    parent.divide = divide.bind(parent);
-    parent.subtract = subtract.bind(parent);
+    this.value = value || 0;
+
+    this.add = add.bind(parent);
+
+    this.power = power.bind(parent);
+    this.divide = divide.bind(parent);
+    this.subtract = subtract.bind(parent);
     parent.multiply = multiply.bind(parent);
     parent.additiveIdentity = Numeric.additiveIdentity;
     parent.multiplicativeIdentity = Numeric.multiplicativeIdentity;
@@ -29,6 +31,10 @@ function Numeric(value) {
 
     function divide(x) {
         return new Numeric(this.value / x.value);
+    }
+
+    function power(x) {
+        return new Numeric(this.value ** x);
     }
 }
 
