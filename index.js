@@ -2,21 +2,24 @@ var Matrix = require('./src/matrix');
 var Numeric = require('./src/field/numeric');
 var Finite = require('./src/field/finite');
 
-var matrix =[
-    [1, 0, 1],
-    [1, 1, 1],
-    [0, 1, 1],
-    [1, 0, 0]
-];
+var a = new Finite.Z7(2);
+var b = new Finite.Z7(5);
 
+console.log(a.multiply(b).value);
+console.log(a.divide(b).value);
+console.log(a.add(b).value);
+console.log(a.subtract(b).value);
+console.log(a.additiveIdentity().value);
+console.log(a.multiplicativeIdentity().value);
+console.log(a.additiveInverse().value);
+console.log(a.multiplicativeInverse().value);
 
-console.log(matrix);
 console.log();
-
-var elimination = Matrix.gaussianElimination(matrix);
-console.log(elimination.matrix);
-console.log(elimination.augmentingMatrix);
-
-var a = new Finite.Z2(-11);
-var b = new Finite.Z2(-6);
-console.log(b.multiply(a).value);
+console.log(a.mul(b).value);
+console.log(a.div(b).value);
+console.log(a.add(b).value);
+console.log(a.sub(b).value);
+console.log(a.zero().value);
+console.log(a.one().value);
+console.log(a.neg().value);
+console.log(a.inv().value);

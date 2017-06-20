@@ -3,7 +3,7 @@ var Field = require('./field');
 /**
  * Implements prime finite field arithmetic.
  */
-function Finite(order) {
+function FiniteFieldFactory(order) {
     // Normalises the value to be the least positive residue.
     function normalise(value) {
         if (value < 0)
@@ -12,44 +12,28 @@ function Finite(order) {
         return value % order;
     }
 
-    function create(value) {
-        var parent = new Field();
-        parent.value = normalise(value || 0);
-        parent.add = add.bind(parent);
-        parent.divide = divide.bind(parent);
-        parent.subtract = subtract.bind(parent);
-        parent.multiply = multiply.bind(parent);
-        parent.additiveIdentity = create.additiveIdentity;
-        parent.multiplicativeIdentity = create.multiplicativeIdentity;
+    function FiniteField(value) {
+        this.value = normalise(value || 0);
 
-        return parent;
-
-        function add(x) {
-            return new create(this.value + x.value);
-        }
-
-        function subtract(x) {
-            return new create(this.value - x.value);
-        }
-
-        function multiply(x) {
-            return new create(this.value * x.value);
-        }
-
-        function divide(x) {
-            return this.multiply(x.power(order - 2));
-        }
+        this.add = (x) => new FiniteField(this.value + x.value);
+        this.subtract = (x) => new FiniteField(this.value - x.value);
+        this.multiply = (x) => new FiniteField(this.value * x.value);
+        this.divide = (x) => this.multiply(x.power(order - 2));
+        this.additiveIdentity = FiniteField.additiveIdentity;
+        this.multiplicativeIdentity = FiniteField.multiplicativeIdentity;
     }
 
-    // Basic identity elements.
-    create.additiveIdentity = () => new create(0);
-    create.multiplicativeIdentity = () => new create(1);
+    FiniteField.prototype = new Field();
+    FiniteField.additiveIdentity = () => new FiniteField(0);
+    FiniteField.multiplicativeIdentity = () => new FiniteField(1);
 
-    return create;
+    return FiniteField;
 }
 
 // Common finite fields added as utilities.
-Finite.Z2 = Finite(2);
-Finite.Z3 = Finite(3);
+FiniteFieldFactory.Z2 = FiniteFieldFactory(2);
+FiniteFieldFactory.Z3 = FiniteFieldFactory(3);
+FiniteFieldFactory.Z5 = FiniteFieldFactory(5);
+FiniteFieldFactory.Z7 = FiniteFieldFactory(7);
 
-module.exports = Finite;
+module.exports = FiniteFieldFactory;

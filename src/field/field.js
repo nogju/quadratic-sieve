@@ -3,21 +3,18 @@
  * as a base class that implements field-independent operations.
  */
 function Field() {
-    this.power = power.bind(this);
-    this.additiveInverse = additiveInverse.bind(this);
-    this.multiplicativeInverse = multiplicativeInverse.bind(this);
-
     if (Field.aliases) {
         Object
             .keys(Field.aliases)
             .forEach((key) => {
-                console.log(this);
-                this[key] = () => this[Field.aliases[key]].apply(this, arguments);
+                this[key] = function() {
+                    return this[Field.aliases[key]].apply(this, arguments)
+                };
              });
     }
 
     // Basic integer power implementation.
-    function power(n) {
+    this.power = function(n) {
         let value = this.multiplicativeIdentity();
 
         if (n < 0) {
@@ -31,13 +28,13 @@ function Field() {
         return value;
     }
 
-    function additiveInverse() {
+    this.additiveInverse = function() {
         return this
             .additiveIdentity()
             .subtract(this);
     }
 
-    function multiplicativeInverse() {
+    this.multiplicativeInverse = function() {
         return this
             .multiplicativeIdentity()
             .divide(this);
