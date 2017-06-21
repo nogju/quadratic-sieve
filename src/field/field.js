@@ -1,6 +1,9 @@
 /**
  * We want to implement algebra over arbitrary fields - the Field type acts
  * as a base class that implements field-independent operations.
+ *
+ * This is a slight abuse of notation - we use field constructors to create
+ * elements of the field, as opposed to representing the field itself. TODO
  */
 function Field() {
     if (Field.aliases) {

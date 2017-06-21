@@ -19,6 +19,8 @@ function FiniteFieldFactory(order) {
         this.subtract = (x) => new FiniteField(this.value - x.value);
         this.multiply = (x) => new FiniteField(this.value * x.value);
         this.divide = (x) => this.multiply(x.power(order - 2));
+        this.equals = (x) => this.value == x.value;
+        this.toString = () => this.value.toString();
         this.additiveIdentity = FiniteField.additiveIdentity;
         this.multiplicativeIdentity = FiniteField.multiplicativeIdentity;
     }
@@ -26,6 +28,8 @@ function FiniteFieldFactory(order) {
     FiniteField.prototype = new Field();
     FiniteField.additiveIdentity = () => new FiniteField(0);
     FiniteField.multiplicativeIdentity = () => new FiniteField(1);
+    FiniteField.one = FiniteField.multiplicativeIdentity;
+    FiniteField.zero = FiniteField.additiveIdentity;
 
     return FiniteField;
 }
