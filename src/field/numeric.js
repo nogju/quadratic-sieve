@@ -4,6 +4,9 @@ var Field = require('./field');
  * Implements a basic wrapper around javascript numeric types.
  */
 function NumericField(value) {
+    if (value instanceof NumericField)
+        return new NumericField(value.value);
+
     this.value = value || 0;
 
     this.add = (x) => new NumericField(this.value + x.value);
