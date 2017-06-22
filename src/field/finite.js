@@ -30,6 +30,9 @@ function FiniteFieldFactory(order) {
 
         // Fast exponentiation by squaring.
         this.power = function(n) {
+            // Only integer powers should be given.
+            assert(n === Math.round(n));
+
             if (n < 0) return this.multiplicativeInverse().power(-n);
             if (n == 0) return FiniteField.multiplicativeIdentity();
             if (n == 1) return new FiniteField(this);
@@ -40,6 +43,10 @@ function FiniteFieldFactory(order) {
 
         // Euler's criterion for determining whether we have a root.
         this.isQuadraticResidue = function() {
+            // Z2 is still special.
+            if (order === 2)
+                return this.value === 1;
+
             return this.power((order - 1) / 2).equals(FiniteField.multiplicativeIdentity());
         }
 
@@ -47,11 +54,14 @@ function FiniteFieldFactory(order) {
         this.sqrt = function() {
             assert(this.isQuadraticResidue());
 
+            // Z2 is special.
+            if (order === 2)
+                return new FiniteField(this);
+
             // Find a non-residue as our fudge value.
             let g = new FiniteField(2);
             while(g.isQuadraticResidue())
                 g = g.add(FiniteField.multiplicativeIdentity());
-            console.log("Least non-residue: " + g);
 
             // Factorise p-1 as p-1 = QS where Q is odd and S a 2-power.
             let S = 1;
@@ -60,13 +70,13 @@ function FiniteFieldFactory(order) {
                 Q /= 2;
                 S *= 2;
             }
-            console.log(S + " * " + Q + "  =  " + S*Q);
 
             // Construct auxilliary variables and run the algorithm.
             let R = this.power((Q+1) / 2);
             let t = this.power(Q);
             let c = g.power(Q);
             let m = S;
+
             while(m > 1) {
                 // Find order of t, which is necessarily a 2-power.
                 let i = 1;
@@ -76,12 +86,15 @@ function FiniteFieldFactory(order) {
                     _t = _t.multiply(_t);
                 }
 
+                // Should never have a situation where order doesn't decrease.
+                assert(i < m);
+
                 // We've found our root!
                 if (i == 1)
                     return R;
 
                 // Restrict to a smaller 2-subgroup.
-                let b = c.power(i / 2);
+                let b = c.power(m / i / 2);
                 R = R.multiply(b);
                 c = b.multiply(b);
                 t = t.multiply(c);
