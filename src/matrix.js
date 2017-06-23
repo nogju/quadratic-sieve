@@ -74,7 +74,7 @@ function MatrixFactory(field) {
         this.toString = function() {
             let cellToString = (x) => x.toString();
             let rowToString = (row) => row.map(cellToString).join(' ');
-            
+
             return this.values.map(rowToString).join('\n');
         }
 
@@ -119,6 +119,34 @@ function MatrixFactory(field) {
                 matrix: workingMatrix,
                 augmentingMatrix: augmentingMatrix
             }
+        }
+
+        /**
+         * Basic utility functions.
+         */
+        this.numRows = () => this.values.length;
+        this.numColumns = () => this.values[0].length;
+        this.getValue = (i, j) => this.values[i][j];
+        this.getRow = (i) => this.values[i];
+
+        /**
+         * Finds a basis for the kernel of this row matrix using Gaussian reduction.
+         */
+        this.kernelBasis = function() {
+            var reduction = this.gaussianReduction();
+
+            let kernel = [];
+            for (let i = 0; i < reduction.matrix.numRows(); i++) {
+                let isZero = true;
+                for (let j = 0; j < reduction.matrix.numColumns(); j++)
+                    if (!reduction.matrix.getValue(i, j).equals( this.field.zero() ))
+                        isZero = false;
+
+                if (isZero)
+                    kernel.push(reduction.augmentingMatrix.getRow(i));
+            }
+
+            return kernel;
         }
     }
 

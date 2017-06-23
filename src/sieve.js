@@ -1,11 +1,9 @@
 var FiniteFieldFactory = require('./field/finite');
 
 /**
- * Sieves for a factor base in the range [2, N].
- * We only want primes for which n is a quadratic residue, as we can sieve
- * solutions to Q(x) = n - x^2 for division by these primes efficiently.
+ * Sieves for primes in the range [2, N] using the sieve of Erastosthenes.
  */
-function factorBase(N, n) {
+function primes(N) {
     let sieve = [];
     for (let i = 0; i <= N; i++)
         sieve.push(true);
@@ -13,9 +11,7 @@ function factorBase(N, n) {
     let results = [];
     for (let i = 2; i <= N; i++) {
         if (sieve[i]) {
-            let Field = FiniteFieldFactory(i);
-            if (new Field(n).isQuadraticResidue())
-                results.push(i);
+            results.push(i);
 
             for (let j = 2*i; j <= N; j += i)
                 sieve[j] = false;
@@ -31,12 +27,11 @@ function factorBase(N, n) {
  *
  * TODO there are many ways to implement this - implement the log method and compare.
  */
+naiveSmooth.Q = (x, n) => n - x*x;
 function naiveSmooth(A, B, n, base) {
-    let Q = (x) => n - x*x;
-
     let sieve = [];
     for (let i = A; i <= B; i++)
-        sieve.push(Math.abs(Q(i)));
+        sieve.push(Math.abs(naiveSmooth.Q(i, n)));
 
     for (let i = 0; i < base.length; i++) {
         // We sieve the function Q(x) = n - x^2 by computing n's roots mod p.
@@ -50,7 +45,7 @@ function naiveSmooth(A, B, n, base) {
                     sieve[index - A] /= base[i];
         }
 
-        for (let j = Math.floor(A / base[i]); j <= B; j += base[i]) {
+        for (let j = base[i] * Math.floor(A / base[i]); j <= B; j += base[i]) {
             sieveOut(j + r1.value);
             sieveOut(j + r2.value);
         }
@@ -65,6 +60,6 @@ function naiveSmooth(A, B, n, base) {
 }
 
 module.exports = {
-    factorBase: factorBase,
+    primes: primes,
     smoothArguments: naiveSmooth
 }
